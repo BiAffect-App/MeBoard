@@ -349,6 +349,48 @@ class Database: NSObject {
         }
     }
     
+    
+    func typoList(word: String) -> Set<String> {
+        if word.isEmpty { return [] }
+        
+        var wordCombos = [(String,String)]()
+        
+        for index in 0...word.characters.count-1 {
+            wordCombos.append((String(word.characters.prefix(index)), String(word.characters.suffix(word.characters.count-index))))
+        }
+        
+        var removeLetters = [String]()
+        
+        wordCombos.forEach{str1,str2 in
+            
+            removeLetters.append("\(str1)+\(str2.characters.dropFirst())")
+        }
+        
+        let shifts: [String] = wordCombos.map { left, right in
+            if let fst = right.characters.first {
+                let drop1 = right.characters.dropFirst()
+                if let snd = drop1.first {
+                    let drop2 = drop1.dropFirst()
+                    return "\(String(left)!)\(String(snd))\(String(fst))\(String(drop2))"
+                }
+            }
+            return ""
+            }.filter { !$0.isEmpty }
+        
+        let letters = "abcdefghijklmnopqrstuvwxyz"
+        
+        let replaces = wordCombos.flatMap { left, right in
+            letters.characters.map { "\(left)\(String($0))\(String(right.characters.dropFirst()))" }
+        }
+        
+        let inserts = wordCombos.flatMap { left, right in
+            letters.characters.map { "\(left)\($0)\(right)" }
+        }
+        
+        return Set(removeLetters + shifts + replaces + inserts)
+    }
+
+    
     func recommendationQuery(user_profile: String, n: Int, pattern: String,
                              words: [String], result_set: Set<String>) -> Set<String> {
         
