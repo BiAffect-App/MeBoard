@@ -491,6 +491,8 @@ class PredictBoard: KeyboardViewController, UIPopoverPresentationControllerDeleg
         self.banner?.backButton.removeTarget(self, action: #selector(exitDataSourceView), for: .touchUpInside)
     }
     
+    
+    
     func addDataSource() {
         
         var HTMLArray = [" "]
