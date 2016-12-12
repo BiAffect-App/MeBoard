@@ -704,27 +704,27 @@ class PredictBoard: KeyboardViewController, UIPopoverPresentationControllerDeleg
                 // increment
                 i += 1
             }
-            
-            for (key,val) in trigrams{
-                let splitWords = key.characters.split{$0 == " " }
-                let word1 = " \(String(splitWords[0])) \(String(splitWords[1])) "
-                let word2 = String(splitWords[2])
-                let llrValue = self.llr(w1Count: unigrams[word1]!, w2Count: unigrams[word2]!, w1w2Count: val, n:len)
-                if llrValue > 0 {
-                    trigrams.removeValue(forKey: key)
-                }
-            }
-            
-            for (key,val) in bigrams{
-                let splitWords = key.characters.split{$0 == " " }
-                let word1 = String(splitWords[0])
-                let word2 = String(splitWords[1])
-                let llrValue = self.llr(w1Count: unigrams[word1]!, w2Count: unigrams[word2]!, w1w2Count: val, n: len)
-                                if  llrValue > 0 {
-                                    bigrams.removeValue(forKey: key)
-                                }
-                
-            }
+//            
+//            for (key,val) in trigrams{
+//                let splitWords = key.characters.split{$0 == " " }
+//                let word1 = " \(String(splitWords[0])) \(String(splitWords[1])) "
+//                let word2 = String(splitWords[2])
+//                let llrValue = self.llr(w1Count: unigrams[word1]!, w2Count: unigrams[word2]!, w1w2Count: val, n:len)
+//                if llrValue > 0 {
+//                    trigrams.removeValue(forKey: key)
+//                }
+//            }
+//            
+//            for (key,val) in bigrams{
+//                let splitWords = key.characters.split{$0 == " " }
+//                let word1 = String(splitWords[0])
+//                let word2 = String(splitWords[1])
+//                let llrValue = self.llr(w1Count: unigrams[word1]!, w2Count: unigrams[word2]!, w1w2Count: val, n: len)
+//                                if  llrValue > 0 {
+//                                    bigrams.removeValue(forKey: key)
+//                                }
+//                
+//            }
 
             
             /*
