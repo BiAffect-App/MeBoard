@@ -555,6 +555,28 @@ class PredictBoard: KeyboardViewController, UIPopoverPresentationControllerDeleg
         self.banner?.backButton.removeTarget(self, action: #selector(exitDataSourceView), for: .touchUpInside)
     }
     
+    func combiner(n: Int, k: Int) -> Double {
+        return Double(n*k)/Double(n-k)
+    }
+    
+    func logPmf(n: Int, p: Double, k: Int) -> Double {
+        let r = Double(k)
+        return log2(Double(combiner(n: n, k: k))*pow(p, r)*pow(1 - p, Double(n - k)))
+    }
+    
+    func llr(w1Count: Int = 0, w2Count: Int = 0,
+             w1w2Count: Int = 0, n: Int = 0) -> Double{
+        let p0 = Double(w2Count)/Double(n)
+        let p10 = Double(w1w2Count)/Double(n)
+        let p11 = Double((w2Count-w1w2Count))/Double(n)
+        
+        let s1 = logPmf(n: w1Count, p: p0, k: w1w2Count) + logPmf(n: n - w1Count, p: p0, k: (w2Count-w1w2Count))
+        
+        let s2 = logPmf(n: w1Count, p: p10, k: w1w2Count) + logPmf(n: n - w1Count, p: p11, k: (w2Count-w1w2Count))
+        
+        return s1 - s2
+    }
+    
     func addDataSource() {
          //grab url before it is cleared
         let myURLString = self.banner?.textField.text
@@ -682,6 +704,28 @@ class PredictBoard: KeyboardViewController, UIPopoverPresentationControllerDeleg
                 // increment
                 i += 1
             }
+            
+            for (key,val) in trigrams{
+                let splitWords = key.characters.split{$0 == " " }
+                let word1 = " \(String(splitWords[0])) \(String(splitWords[1])) "
+                let word2 = String(splitWords[2])
+                let llrValue = self.llr(w1Count: unigrams[word1]!, w2Count: unigrams[word2]!, w1w2Count: val, n:len)
+                if llrValue > 0 {
+                    trigrams.removeValue(forKey: key)
+                }
+            }
+            
+            for (key,val) in bigrams{
+                let splitWords = key.characters.split{$0 == " " }
+                let word1 = String(splitWords[0])
+                let word2 = String(splitWords[1])
+                let llrValue = self.llr(w1Count: unigrams[word1]!, w2Count: unigrams[word2]!, w1w2Count: val, n: len)
+                                if  llrValue > 0 {
+                                    bigrams.removeValue(forKey: key)
+                                }
+                
+            }
+
             
             /*
             print("\n---Unigrams---\n")
