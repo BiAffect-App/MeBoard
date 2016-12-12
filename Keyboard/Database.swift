@@ -372,7 +372,35 @@ class Database: NSObject {
     }
     
     func typoList(word: String) -> Set<String> {
-        if word.isEmpty { return ["hello"] }
+        if word.isEmpty { return [""] }
+        
+        let fatFingerLetters = [
+            "": "abcdefghijklmnopqrstuvwxyz",
+            "a": "qwsz",
+            "b": "vghn",
+            "c": "xdfv",
+            "d": "erfcxs",
+            "e": "rdsw",
+            "f": "rtgvcd",
+            "g": "tyhbvf",
+            "h": "yujnbg",
+            "j": "uikmnh",
+            "k": "iolmj",
+            "l": "opk",
+            "m": "njk",
+            "n": "bhjm",
+            "o": "iklp",
+            "p": "ol",
+            "q": "wa",
+            "r": "edft",
+            "s": "wedxza",
+            "t": "rfgy",
+            "u": "yhji",
+            "v": "cfgb",
+            "w": "qase",
+            "x": "zsdc",
+            "y": "tghu",
+            "z": "asx"]
         
         var wordCombos = [(String,String)]()
         
@@ -402,7 +430,7 @@ class Database: NSObject {
         let letters = "abcdefghijklmnopqrstuvwxyz"
         
         let replaces = wordCombos.flatMap { left, right in
-            letters.characters.map { "\(left)\(String($0))\(String(right.characters.dropFirst()))" }
+            fatFingerLetters[String(right.characters.prefix(1))]!.characters.map { "\(left)\(String($0))\(String(right.characters.dropFirst()))" }
         }
         
         let inserts = wordCombos.flatMap { left, right in
